@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home - Simple Car Shop</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+    }
+
+    /* ✅ Navigation Bar */
+    nav {
+      background-color: #111;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.7rem 2rem;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      margin: 0;
+      padding: 0;
+      gap: 1.5rem;
+    }
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    nav ul li a:hover {
+      color: #ffcc00;
+    }
+
+    /* ✅ Header */
+    header {
+      background-image: url("/Users/nikitaparmar/Downloads/360_F_216604243_4yvQhIudgknAWu04Ob7aSOu6BdIfhBNb.jpg");
+      background-size: cover;
+      background-position: center;
+      height: 850px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding-left: 3rem;
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+      border-bottom: 4px solid #0056b3;
+    }
+
+    header h2 {
+      font-size: 2.5rem;
+      margin: 0;
+    }
+
+    /* ✅ Container */
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+    }
+
+    .filters {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    /* ✅ Car Grid */
+    .car-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+
+    .car-card {
+      background: white;
+      border: 1px solid #ddd;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .car-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .car-card button {
+      background: #28a745;
+      color: white;
+      border: none;
+      padding: 0.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+    }
+    .car-card button:hover { background: #218838; }
+
+    /* ✅ Your Cart Section */
+    .cart-section {
+      margin-top: 2rem;
+      padding: 1rem;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .cart-section h2 {
+      color: #28a745;
+      margin-bottom: 1rem;
+    }
+    .cart-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      padding: 0.5rem;
+      border-bottom: 1px solid #ddd;
+    }
+    .cart-item img {
+      width: 80px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+    .cart-item p {
+      margin: 0;
+      flex: 1;
+    }
+    .remove-btn {
+      background-color: red;
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .remove-btn:hover {
+      background-color: darkred;
+    }
+    .cart-total {
+      font-weight: bold;
+      margin-top: 1rem;
+    }
+
+    /* ✅ Modal (Popup) */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      width: 90%;
+      max-width: 500px;
+      text-align: center;
+      position: relative;
+    }
+
+    .modal-content img {
+      width: 100%;
+      height: 230px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 24px;
+      cursor: pointer;
+      color: #333;
+    }
+    .close:hover { color: red; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+      font-size: 0.95em;
+    }
+    table th, table td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    table th {
+      background-color: #f8f8f8;
+      font-weight: bold;
+    }
+
+    .btn {
+      margin: 8px;
+      padding: 8px 14px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .btn-cart { background-color: #28a745; color: white; }
+    .btn-buy { background-color: #ff9800; color: white; }
+    .btn-cart:hover { background-color: #218838; }
+    .btn-buy:hover { background-color: #e68900; }
+
+    /* ✅ Contact Page Section */
+    .contact-section {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+      text-align: center;
+    }
+    .contact-section h2 {
+      color: #28a745;
+      margin-bottom: 1rem;
+    }
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .contact-form input, .contact-form textarea {
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .contact-form button {
+      background: #28a745;
+      color: white;
+      border: none;
+      padding: 0.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .contact-form button:hover { background: #218838; }
+
+    /* ✅ Footer */
+    footer {
+      background: rgba(51, 51, 51, 0.9);
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ✅ Navigation Bar -->
+  <nav>
+    <ul>
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#cart">Your Cart</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- ✅ Header -->
+  <header id="home">
+    <h2><i>Find your dream car and redefine your drive</i></h2>
+    <h3><i>Where style meets performance — every journey begins with you.</i></h3>
+  </header>
+
+  <!-- ✅ Car Container -->
+  <div class="container">
+    <div class="filters">
+      <select id="sort">
+        <option value="name">Sort by Name</option>
+        <option value="price-low">Price: Low to High</option>
+        <option value="price-high">Price: High to Low</option>
+      </select>
+    </div>
+    <div class="car-grid" id="car-grid"></div>
+  </div>
+
+  <!-- ✅ Your Cart Section -->
+  <div class="container cart-section" id="cart">
+    <h2>Your Cart</h2>
+    <div id="cartItems">
+      <p>Your cart is empty.</p>
+    </div>
+    <div class="cart-total" id="cartTotal">Total: $0</div>
+  </div>
+
+  <!-- ✅ Modal -->
+  <div id="carModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <img id="modalImage" src="" alt="Car Image">
+      <h2 id="modalName"></h2>
+      <p id="modalPrice"></p>
+      <table id="carSpecs"></table>
+      <button class="btn btn-cart" onclick="addToCart()">Add to Cart</button>
+      <button class="btn btn-buy" onclick="buyNow()">Buy Now</button>
+    </div>
+  </div>
+
+  <!-- ✅ Contact Page Section -->
+  <div class="contact-section" id="contact">
+    <h2>Contact Us</h2>
+    <p>Get in touch with us for inquiries, support, or to schedule a test drive.</p>
+    <form class="contact-form">
+      <input type="text" placeholder="Your Name" required>
+      <input type="email" placeholder="Your Email" required>
+      <textarea placeholder="Your Message" rows="5" required></textarea>
+      <button type="submit">Send Message</button>
+    </form>
+    <p>Email: info@motogalaxy.com | Phone: +1 (123) 456-7890</p>
+  </div>
+
+  <!-- ✅ Footer -->
+  <footer>
+    <p>&copy; 2025 Moto galaxy . All rights reserved.</p>
+  </footer>
+
+  <!-- ✅ JavaScript -->
+  <script>
+    let cart = [];
+    let selectedCar;
+
+    const cars = [
+      { name: "BMW M3", price: 78400, image: "/Users/nikitaparmar/Downloads/bmw-css-7-series-protection-ms-new-standard.jpg", specs: { Engine: "3.0L Twin-Turbo Inline-6", Power: "473 hp", "Top Speed": "250 km/h (limited)", "0–100 km/h": "4.1 s", Fuel: "Petrol" }},
+      { name: "Porsche", price: 77175, image: "/Users/nikitaparmar/Downloads/images-6.jpeg", specs: { Engine: "3.0L Twin-Turbo Flat-6", Power: "379 hp", "Top Speed": "293 km/h", "0–100 km/h": "4.2 s", Fuel: "Petrol" }},
+      { name: "Lamborghini", price: 250000, image: "/Users/nikitaparmar/Downloads/images-7.jpeg", specs: { Engine: "5.2L V10", Power: "610 hp", "Top Speed": "325 km/h", "0–100 km/h": "3.2 s", Fuel: "Petrol" }},
+      { name: "Audi", price: 37000, image: "/Users/nikitaparmar/Downloads/original-13270-s7-2024-6701-66d8a83a30973.jpg.avif", specs: { Engine: "4.0L V8 TFSI", Power: "450 hp", "Top Speed": "250 km/h", "0–100 km/h": "4.6 s", Fuel: "Petrol" }},
+      { name: "Mahindra Thar", price: 15500, image: "/Users/nikitaparmar/Downloads/Mahindrathar_1604486465203_1604486476898_1684738524465.jpg.avif", specs: { Engine: "2.2L Diesel", Power: "150 hp", "Top Speed": "155 km/h", "0–100 km/h": "10.2 s", Fuel: "Diesel" }},
+      { name: "Maruti Suzuki", price: 25000, image: "/Users/nikitaparmar/Downloads/front-left-side-47.jpg.avif", specs: { Engine: "1.2L Petrol", Power: "90 hp", "Top Speed": "180 km/h", "0–100 km/h": "11.5 s", Fuel: "Petrol" }},
+      { name: "Mercedes", price: 44400, image: "/Users/nikitaparmar/Downloads/c300-mercedes-w206-1.jpg", specs: { Engine: "2.0L Turbo Petrol", Power: "197 hp", "Top Speed": "240 km/h", "0–100 km/h": "7.6 s", Fuel: "Petrol" }},
+      { name: "Rang Rover Defender", price: 7000000, image: "/Users/nikitaparmar/Downloads/Land_Rover_Defender_2_aa9f7a902c.png", specs: { Engine: "3.0L 6-Cylinder Diesel", Power: "296 hp", "Top Speed": "191 km/h", "0–100 km/h": "7.6 s", Fuel: "Diesel" }}
+    ];
+
+    function renderCars() {
+      const grid = document.getElementById("car-grid");
+      grid.innerHTML = "";
+      let sortedCars = [...cars];
+      const sortValue = document.getElementById("sort").value;
+      if (sortValue === "price-low") sortedCars.sort((a, b) => a.price - b.price);
+      else if (sortValue === "price-high") sortedCars.sort((a, b) => b.price - a.price);
+      else sortedCars.sort((a, b) => a.name.localeCompare(b.name));
+
+      sortedCars.forEach(car => {
+        const card = document.createElement("div");
+        card.className = "car-card";
+        card.innerHTML = `
+          <img src="${car.image}" alt="${car.name}" onclick="showDetails('${car.name}')">
+          <h3>${car.name}</h3>
+          <p>Price: $${car.price.toLocaleString()}</p>
+          <button onclick="showDetails('${car.name}')">View Details</button>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function showDetails(name) {
+      selectedCar = cars.find(c => c.name === name);
+      document.getElementById("modalName").innerText = selectedCar.name;
+      document.getElementById("modalPrice").innerText = "Price: $" + selectedCar.price.toLocaleString();
+      document.getElementById("modalImage").src = selectedCar.image;
+
+      const table = document.getElementById("carSpecs");
+      table.innerHTML = "";
+      for (let key in selectedCar.specs) {
+        table.innerHTML += `<tr><th>${key}</th><td>${selectedCar.specs[key]}</td></tr>`;
+      }
+
+      document.getElementById("carModal").style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("carModal").style.display = "none";
+    }
+
+    function addToCart() {
+      cart.push(selectedCar);
+      updateCart();
+      alert(selectedCar.name + " added to cart!");
+      closeModal();
+    }
+
+    function buyNow() {
+      cart.push(selectedCar);
+      updateCart();
+      alert("Item added to cart! Scroll to 'Your Cart' to see it.");
+      closeModal();
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      updateCart();
+    }
+
+    function updateCart() {
+      const cartDiv = document.getElementById("cartItems");
+      const totalDiv = document.getElementById("cartTotal");
+      cartDiv.innerHTML = "";
+      let total = 0;
+      if (cart.length === 0) {
+        cartDiv.innerHTML = "<p>Your cart is empty.</p>";
+        totalDiv.innerText = "Total: $0";
+        return;
+      }
+      cart.forEach((item, index) => {
+        total += item.price;
+        const div = document.createElement("div");
+        div.className = "cart-item";
+        div.innerHTML = `
+          <img src="${item.image}" alt="${item.name}">
+          <p>${item.name}</p>
+          <p>$${item.price.toLocaleString()}</p>
+          <button class="remove-btn" onclick="removeFromCart(${index})">Remove</button>
+        `;
+        cartDiv.appendChild(div);
+      });
+      totalDiv.innerText = `Total: $${total.toLocaleString()}`;
+    }
+
+    document.getElementById("sort").addEventListener("change", renderCars);
+    renderCars();
+    updateCart();
+  </script>
+</body>
+</html>
